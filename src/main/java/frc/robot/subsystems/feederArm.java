@@ -33,14 +33,6 @@ public class feederArm extends SubsystemBase {
     this.master.setNeutralMode(NeuralMode.Brake);
     this.master.setInverted(InvertType.None);
     this.mastrt.configSelectedFeedbackSensor(FeedbacDevice.CTRE_MagEncoder_Absolute);
-    
-    
-    /*
-     * Configuration method for the motor:
-     * 
-     * Setting the mode of the      
-     */
-
   }
 
   public void set(double power) {
