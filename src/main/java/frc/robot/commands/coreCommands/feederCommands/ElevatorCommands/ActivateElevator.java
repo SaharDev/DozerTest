@@ -5,31 +5,29 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.coreCommands.feederCommands;
+package frc.robot.commands.coreCommands.feederCommands.ElevatorCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ActivateFeeder extends CommandBase {
+public class ActivateElevator extends CommandBase {
   /**
-   * Creates a new ActivateFeeder.
+   * Creates a new ActivateElevator.
    */
 
-
-  private final feeder feeder;
+  private final ElevatorSubsystem elevator;
   private final double power;
 
-  public ActivateFeeder(feeder feeeder , double power) {
+  public ActivateElevator(ElevatorSubsystem elevator, double power) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.feeder = feeder;
+    this.elevator = elevator;
     this.power = power;
-    
-    addRequirements(feeder);
+    addRequirements(elevator);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    this.feeder.set(power);
+    this.elevator.set(power);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,7 +38,7 @@ public class ActivateFeeder extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    this.feeder.stop();
+    this.elevator.stop();
   }
 
   // Returns true when the command should end.

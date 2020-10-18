@@ -21,9 +21,9 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  private final feeder feeder;
+  private final XboxController joystick1;
 
 
 
@@ -31,7 +31,10 @@ public class RobotContainer {
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    // Configure the button bindings
+    // Configure the button 
+    this.feeder = new feeder();
+    this.joystick1 = new XboxController(0);
+
     configureButtonBindings();
   }
 
@@ -42,6 +45,8 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    JoystickButton bActivateFeeder = new JoystickButton(this.joystick1, 1);
+    bActivateFeeder.whenHeldK(new ASctivateFeeder(this.feeder, 0.8));
   }
 
 
