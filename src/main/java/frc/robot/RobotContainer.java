@@ -9,9 +9,13 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.coreCommands.FeederCommands.ActivateFeeder;
+import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.FeederArmSubsystem;
+import frc.robot.subsystems.FeederSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -21,20 +25,25 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  //private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
-  private final feeder feeder;
+  //private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+
+  private final FeederSubsystem feeder;
+  private final ElevatorSubsystem elevator;
+  private final FeederArmSubsystem arm;
   private final XboxController joystick1;
-
-
-
+  private final DriveTrain driveTrain;
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    // Configure the button 
-    this.feeder = new feeder();
-    this.joystick1 = new XboxController(0);
-
+    // Configure the button bindings
+    this.feeder = new FeederSubsystem();
+    this.elevator = new ElevatorSubsystem();
+    this.arm = new FeederArmSubsystem();
+    this.driveTrain = new DriveTrain();
+    this.joystick1 = new XboxController(Constants.kJoystick1Port);
     configureButtonBindings();
   }
 
@@ -46,7 +55,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     JoystickButton bActivateFeeder = new JoystickButton(this.joystick1, 1);
-    bActivateFeeder.whenHeldK(new ASctivateFeeder(this.feeder, 0.8));
+    bActivateFeeder.whenHeld(new ActivateFeeder(this.feeder, 0.8));
   }
 
 
@@ -57,6 +66,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return null;
   }
 }

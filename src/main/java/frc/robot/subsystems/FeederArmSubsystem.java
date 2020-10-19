@@ -7,32 +7,39 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class feader extends SubsystemBase {
+public class FeederArmSubsystem extends SubsystemBase {
   /**
-   * Creates a new feader.
+   * Creates a new FeederSubsystem.
    */
 
-  private final QPI_VictorSPX master;
-
-  public feeder() {
-    this.master = new WPI_VictorSPX(Constants.kFeederPort);
+  private final WPI_TalonSRX master;
+  
+  public FeederArmSubsystem() {
+    this.master = new WPI_TalonSRX(Constants.kFeederArmPort);
     this.configMotor();
-    
+    this.stop();
   }
 
   public void configMotor(){
-    this.master.setNeutralMode(Neutral.Mode.Brake);
+    this.master.setNeutralMode(NeutralMode.Brake);
     this.master.setInverted(InvertType.None);
-    stop();
+    this.master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
   }
 
-  public void set(double power){
-    this.master.set(ControlMode.PercentOutput, power);
-  } 
-  public void stop(){
+  public void set(double power) {
+    this.master.set(ControlMode.PercentOutput,power);
+  }
+
+  public void stop() {
     this.master.stopMotor();
   }
 

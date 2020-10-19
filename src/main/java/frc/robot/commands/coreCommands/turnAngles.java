@@ -5,30 +5,47 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.coreCommands.ElevatorCommands;
+package frc.robot.commands.coreCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.DriveTrain;
 
-public class ActivateElevator extends CommandBase {
+public class turnAngles extends CommandBase {
   /**
-   * Creates a new ActivateFeeder.
+   * Creates a new turnAngles.
    */
 
-  private final ElevatorSubsystem elevator;
-  private final double power;
+  private final double speed;
+  private final DriveTrain  dt;
+  private double endDeg;
+  private final double deg;
 
-  public ActivateElevator(ElevatorSubsystem elevator, double power) {
+
+  /**
+   * 
+   * @param speed
+   * @param dt
+   * @param deg cant be equal to 0 (deg != 0)
+   */
+  public turnAngles(double speed, DriveTrain dt, double deg) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.elevator = elevator;
-    this.power = power;
-    addRequirements(elevator);
+    
+    this.speed = speed;
+    this.dt = dt;
+    this.deg = deg;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    this.elevator.set(power);
+    this.endDeg = dt.getHeading() + this.deg;
+    
+    if(deg > 0){
+      this.dt.tankDrive(this.speed, -this.speed, 1);
+    }
+    else{
+      this.dt.tankDrive(-this.speed, this.speed, 1);
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,12 +56,16 @@ public class ActivateElevator extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    this.elevator.stop();
+    this.dt.tankDrive(0, 0, 0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    
+    if(deg > 0){ // turning right 
+      return dt.getHeading() >= endDeg;
+    }
+    return dt.getHeading() <= endDeg; // turning left
   }
 }

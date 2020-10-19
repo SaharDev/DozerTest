@@ -5,25 +5,43 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.coreCommands.feederCommands;
+package frc.robot.commands.coreCommands.FeederCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.FeederSubsystem;
 
 public class ActivateFeeder extends CommandBase {
   /**
    * Creates a new ActivateFeeder.
    */
 
+  private double endTime;
+  private final double duration;
 
-  private final feeder feeder;
+  private final FeederSubsystem feeder;
   private final double power;
 
-  public ActivateFeeder(feeder feeeder , double power) {
+  public ActivateFeeder(FeederSubsystem feeder, double power) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.feeder = feeder;
     this.power = power;
-    
-    addRequirements(feeder);
+    this.addRequirements(feeder);
+  }
+
+
+  /**
+   * ActivateFeeder with timeout in seconds
+   * 
+   * @param feeder
+   * @param power
+   * @param duration
+   */
+  public ActivateFeeder(FeederSubsystem feeder, double power, double duration) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    this.feeder = feeder;
+    this.power = power;
+    this.addRequirements(feeder);
+    this.withTimeout(duration);
   }
 
   // Called when the command is initially scheduled.
@@ -46,6 +64,9 @@ public class ActivateFeeder extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if(this.duration != 0)
+      return Timer.getFPGATimestamp >= thsi.endTime;
+    else
+      return false;
   }
 }
