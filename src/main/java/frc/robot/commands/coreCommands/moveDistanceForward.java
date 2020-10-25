@@ -10,43 +10,49 @@ package frc.robot.commands.coreCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
 
-public class turnAngles extends CommandBase {
+public class moveDistanceForward extends CommandBase {
   /**
-   * Creates a new turnAngles.
+   * Creates a new moveDistanceForward.
    */
 
-  private final double speed;
+  private final int distance;
+  private final double speed; 
   private final DriveTrain dt;
-  private double endDeg;
-  private final double deg;
-
+  private final int endPoint;
+  private final boolean isForward;
 
   /**
    * 
-   * @param speed
+   * @param distance negative distance is driving back
+   * @param speed speed always positive, speed > 0
    * @param dt
-   * @param deg cant be equal to 0 (deg != 0)
    */
-  public turnAngles(double speed, DriveTrain dt, double deg) {
+  public moveDistanceForward(int distance, int speed, DriveTrain dt) {
     // Use addRequirements() here to declare subsystem dependencies.
-    
+
     this.speed = speed;
     this.dt = dt;
-    this.deg = deg;
+    this.endPoint = dt.getRawLeftPosition() + this.distance;
+    
+    if(this.distance > 0){
+      this.isForward = true;
+    }
+    else{
+      this.isForward = false;
+    }
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    this.endDeg = dt.getHeading() + this.deg;
-    
-    if(deg > 0){
-      this.dt.tankDrive(this.speed, -this.speed, 1); // right
+    if (isForward){
+      this.dt.tankDrive(speed, speed, 1);
     }
     else{
-      this.dt.tankDrive(-this.speed, this.speed, 1); // left
+      this.dt.tankDrive(-speed,-speed, 1);
     }
   }
+  
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -62,10 +68,9 @@ public class turnAngles extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    
-    if(deg > 0){ // turning right 
-      return dt.getHeading() >= endDeg;
+    if(isForward){
+      return this.dt.getRawLeftPosition() >= this.endPoint;
     }
-    return dt.getHeading() <= endDeg; // turning left
+    return this.dt.getRawLeftPosition() <= this.endPoint;
   }
 }

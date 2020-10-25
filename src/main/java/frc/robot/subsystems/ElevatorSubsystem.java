@@ -25,6 +25,9 @@ public class ElevatorSubsystem extends SubsystemBase {
    */
 
   private final WPI_TalonSRX master;
+  private final int maxHight;
+  private final int minHight;
+
   
   public ElevatorSubsystem() {
     this.master = new WPI_TalonSRX(Constants.kElevatorPort);
@@ -52,4 +55,19 @@ public class ElevatorSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
   }
+
+
+  public canMoveDown(){
+    
+  }
+
+  public canMoveUp(){
+
+  }
+  
+  
+  public int getPos(){
+    return this.master.getSelectedSensorPosition();
+  }
+
 }
