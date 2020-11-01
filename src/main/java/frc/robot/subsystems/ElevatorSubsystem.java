@@ -44,7 +44,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
   
   public void set(double power) {
-    this.master.set(ControlMode.PercentOutput,power);
+    if(power > 0 && canMoveUp()){
+      this.master.set(ControlMode.PercentOutput,power);
+    }
+    else if(canMoveDown()){
+      this.master.set(ControlMode.PercentOutput,power);
+    }
   }
 
   public void stop() {
@@ -56,18 +61,15 @@ public class ElevatorSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-
-  public canMoveDown(){
-    
+  public boolean canMoveDown(){
+    return this.minHight < getPos();
   }
 
-  public canMoveUp(){
-
+  public boolean canMoveUp(){
+    return this.maxHight > getPos();
   }
-  
   
   public int getPos(){
     return this.master.getSelectedSensorPosition();
   }
-
 }
