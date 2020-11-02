@@ -9,41 +9,37 @@ package frc.robot.commands.coreCommands.ElevatorCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ElevatorSubsystem;
-import sun.font.TrueTypeFont;
 
 public class moveElevator extends CommandBase {
   /**
    * Creates a new moveElevator.
    */
   private final ElevatorSubsystem es;
-  private int hight;
-  private final int change;
-  private final int endPos;
-  private final boolean isUp;
+  private final int endHight;
   private final double power;
-
+  private final boolean isUp;
   
-  public moveElevator(ElevatorSubsystem es,int change, double power) {
+  public moveElevator(int endHight, ElevatorSubsystem es) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.es = es;
-    this.hight = this.es.getPos();
-    this.change = change;
-    this.endPos = this.hight + this.change;
-    this.power = power;
-
-    if(this.change > 0){
-      this.isUp = true;
-    }else{
-      this.isUp = false;
-    }
+    this.endHight = endHight;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if(this.isUp){
+    if (this.es.getPos() > this.endHight){
+      this.isUp = true;
+      this.power = power + this.es.getNF();
+    }
+    else{
+      this.isUp = false;
+      this.power = this.es.getNF() - this.es.getNF();
+    }
+    if(isUp){
       this.es.set(this.power);
-    }else{
+    }
+    else{
       this.es.set(-this.power);
     }
   }
@@ -56,17 +52,15 @@ public class moveElevator extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    this.es.set(0);
+    this.es.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     if(this.isUp){
-      return this.endPos <= this.es.getPos();
+      return this.es.getPos() >= this.endHight;
     }
-    else{
-      return this.endPos >= this.es.getPos();
-    }
+    return this.es.getPos() <= this.endHight;
   }
 }

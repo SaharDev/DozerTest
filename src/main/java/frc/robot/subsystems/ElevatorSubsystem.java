@@ -27,12 +27,14 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final WPI_TalonSRX master;
   private final int maxHight;
   private final int minHight;
+  private final double nf;
 
   
   public ElevatorSubsystem() {
     this.master = new WPI_TalonSRX(Constants.kElevatorPort);
     this.configMotor();
     this.stop();
+    this.nf = 0.5;
   }
 
   public void configMotor(){
@@ -71,5 +73,9 @@ public class ElevatorSubsystem extends SubsystemBase {
   
   public int getPos(){
     return this.master.getSelectedSensorPosition();
+  }
+
+  public double getNF(){
+    return this.nf;
   }
 }
